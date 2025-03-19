@@ -8,12 +8,12 @@ export default function Index() {
   const [scoreHistory, setscoreHistory] = useState([""]);
 
   const IncrementScore_1  = () => {
-    setScore_1(setScore_1 => score_1 + 1);
+    setScore_1(score_1 + 1);
     setscoreHistory(scoreHistory => [ ...scoreHistory, "score_1"]);
   }
 
   const IncrementScore_2  = () => {
-    setScore_2(setScore_2 => score_2 + 1);
+    setScore_2(score_2 + 1);
     setscoreHistory(scoreHistory => [ ...scoreHistory, "score_2"]);
   }
 
@@ -26,9 +26,9 @@ export default function Index() {
   const Undo = () => {
     const index = scoreHistory.length - 1;
     if (scoreHistory[index] == "score_1") {
-      setScore_1(setScore_1 => score_1 - 1);
+      setScore_1(score_1 - 1);
     } else if (scoreHistory[index] == "score_2") {
-      setScore_2(setScore_2 => score_2 - 1);
+      setScore_2(score_2 - 1);
     }
     setscoreHistory([...scoreHistory.slice(0, index)]);
   }
