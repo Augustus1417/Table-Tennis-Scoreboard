@@ -1,43 +1,40 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { useState } from 'react'
 import styles from './styles'
 
 export default function Index() {
-  const [score_1, setScore_1] = useState(0);
-  const [score_2, setScore_2] = useState(0);
-  const [scoreHistory, setscoreHistory] = useState([""]);
+  const [scores, setScores] = useState({score_1: 0, score_2: 0});
+  const [scoreHistory, setScoreHistory] = useState([""]);
 
-  const IncrementScore_1  = () => {
-    setScore_1(score_1 + 1);
-    setscoreHistory(scoreHistory => [ ...scoreHistory, "score_1"]);
+  const IncrementScore = (player: keyof typeof scores) => { 
+    setScores(currentScores => ({...currentScores, [player]: currentScores[player] + 1}));
+    setScoreHistory(scores => [...scores, player])
+
   }
-
-  const IncrementScore_2  = () => {
-    setScore_2(score_2 + 1);
-    setscoreHistory(scoreHistory => [ ...scoreHistory, "score_2"]);
+  const DecrementScore = (player: keyof typeof scores) => {
+    setScores(currentScores => ({...currentScores, [player]: currentScores[player] - 1}));
   }
 
   const Reset = () => {
-    setScore_1(0);
-    setScore_2(0);
-    setscoreHistory([""]);
+    setScores({score_1: 0, score_2: 0});
+    setScoreHistory([""]);
   }
 
   const Undo = () => {
     const index = scoreHistory.length - 1;
     if (scoreHistory[index] == "score_1") {
-      setScore_1(score_1 - 1);
+      DecrementScore("score_1");
     } else if (scoreHistory[index] == "score_2") {
-      setScore_2(score_2 - 1);
+      DecrementScore("score_2");
     }
-    setscoreHistory([...scoreHistory.slice(0, index)]);
+    setScoreHistory([...scoreHistory.slice(0, index)]);
   }
 
   return (
     <View style={styles.main_view}>
 
-      <Pressable onPress={IncrementScore_1}>
-        <Text style={styles.score_1}>{score_1}</Text>
+      <Pressable onPress={() => IncrementScore("score_1")}>
+        <Text style={styles.score_1}>{scores["score_1"]}</Text>
       </Pressable>
 
       <View style= {styles.controls_view}>
@@ -50,8 +47,8 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <Pressable onPress={IncrementScore_2}>
-        <Text style={styles.score_2}>{score_2}</Text>
+      <Pressable onPress={() => IncrementScore("score_2")}>
+        <Text style={styles.score_2}>{scores["score_2"]}</Text>
       </Pressable>
 
     </View>
