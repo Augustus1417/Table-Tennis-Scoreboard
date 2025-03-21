@@ -1,6 +1,5 @@
-# Scoreboard App
+# Table Tennis Scoreboard App
 
-- Currently for table-tennis only
 - React Native with Expo
 ---
 ## Installation
