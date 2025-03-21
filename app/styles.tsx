@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet} from "react-native"
 
 const styles = StyleSheet.create({
 main_view: {
@@ -21,7 +21,7 @@ standing: {
     borderColor: 'green',
     borderRadius: 20,
 },
-score_1: {
+player_1: {
     padding: 30,
     color: 'white',
     fontSize: 190,
@@ -29,7 +29,7 @@ score_1: {
     borderWidth: 5,
     borderRadius: 50,
 },
-score_2: {
+player_2: {
     padding: 30,
     color: 'white',
     fontSize: 190,
@@ -47,4 +47,4 @@ reset: {
 }
 })
 
-export default styles;
+export default styles
