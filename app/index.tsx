@@ -5,20 +5,22 @@ import styles from './styles'
 
 export default function Index() {
   const [scores, setScores] = useState({player_1: 0, player_2: 0})
-  const [scoreHistory, setScoreHistory] = useState([""])
+  const [history, setHistory] = useState([""])
   const [standing, setStanding] = useState({player_1: 0, player_2: 0})
-  const [scoreRecord, setScoreRecord] = useState([{}])
-  const [alerted, setAlerted] = useState(false)
+  const [matchRecord, setMatchRecord] = useState([{}]) // save scores whenever a set ends
+  const [prevRecord, setPrevRecord] = useState([{}]) // save matchRecord whenever resetted
+  const [gameState, setGameState] = useState({ // save scores and standing whenever resetted
+    player_1: 0,
+    player_2: 0,
+    player_1_standing: 0,
+    player_2_standing: 0,
+  })
 
   const GameWin = (player: keyof typeof scores) => {
       IncrementStanding(player)
-      setScoreHistory(scores => [...scores, `${player} won`])
-      if (player == "player_1"){
-        Alert.alert("Player 1 won!")
-      } else {
-        Alert.alert("Player 2 won!")
-      }
-      setScoreRecord(currentRecord => [...currentRecord, scores ])
+      setHistory(prevHistory => [...prevHistory, `${player} won`])
+      Alert.alert(player == "player_1" ? "Player 1 won!": "Player 2 won!")
+      setMatchRecord(prevMatchRecord => [...prevMatchRecord, scores ])
       NewSet()
   }
   const IncrementScore = (player: keyof typeof scores) => { 
@@ -28,19 +30,19 @@ export default function Index() {
       GameWin(player)
       return
     }
-    setScoreHistory(scores => [...scores, player])
+    setHistory(prevHistory => [...prevHistory, player])
   }
 
   const IncrementStanding = (player: keyof typeof scores) => {
-    setStanding(currentStanding => ({...currentStanding, [player]: currentStanding[player] + 1}))
+    setStanding(prevStanding => ({...prevStanding, [player]: prevStanding[player] + 1}))
   }
 
   const DecrementScore = (player: keyof typeof scores) => {
-    setScores(currentScores => ({...currentScores, [player]: currentScores[player] - 1}))
+    setScores(prevScores => ({...prevScores, [player]: prevScores[player] - 1}))
   }
 
   const DecrementStanding = (player: keyof typeof scores) => {
-    setStanding(currentStanding => ({...currentStanding, [player]: currentStanding[player] - 1}))
+    setStanding(prevStanding => ({...prevStanding, [player]: prevStanding[player] - 1}))
   }
 
   const NewSet = () => {
@@ -48,33 +50,37 @@ export default function Index() {
   }
 
   const Reset = () => {
-    if (!alerted){
-      Alert.alert("WARNING!", "Reset cannot be undone", [{ 
-        text: "Ok",
-        onPress: () => {
-          setAlerted(true)
-          return}
-      }])
-    } else {
+      setGameState(prevGameState => ({...prevGameState, 
+        player_1: scores.player_1,
+        player_2: scores.player_2,
+        player_1_standing: standing.player_1,
+        player_2_standing: standing.player_2
+      }))
+      setPrevRecord(matchRecord)
       setScores({player_1: 0, player_2: 0})
       setStanding({player_1: 0, player_2: 0})
-      setScoreHistory([""])
-      setScoreRecord([{}])
-    }
+      setHistory(prevHistory => ([...prevHistory, "resetted"]))
+      setMatchRecord([{}])
+  }
+
+  const UndoReset = () => {
+    setScores({player_1: gameState.player_1, player_2:gameState.player_2})
+    setStanding({player_1: gameState.player_1_standing, player_2: gameState.player_2_standing})
+    setMatchRecord(prevRecord)
   }
 
   const UndoStanding = () => {
-      const pastRecord = scoreRecord[scoreRecord.length - 1]
+      const pastRecord = matchRecord[matchRecord.length - 1]
       const newScores = {
         player_1: pastRecord["player_1" as keyof typeof pastRecord], 
         player_2: pastRecord["player_2" as keyof typeof pastRecord]}
-      setScoreRecord([...scoreRecord.slice(0, scoreRecord.length-1)])
+      setMatchRecord([...matchRecord.slice(0, matchRecord.length-1)])
       setScores(newScores)
   }
 
   const Undo = () => {
-    const index = scoreHistory.length - 1
-    switch (scoreHistory[index]) {
+    const index = history.length - 1
+    switch (history[index]) {
       case "player_1":
         DecrementScore("player_1")
         break
@@ -89,8 +95,12 @@ export default function Index() {
         DecrementStanding("player_2") 
         UndoStanding()
         break
+      case "resetted":
+        UndoReset()
+        break
+
     }
-    setScoreHistory([...scoreHistory.slice(0, index)])
+    setHistory([...history.slice(0, index)])
   }
 
   return (
