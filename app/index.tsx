@@ -13,19 +13,69 @@ export default function Index() {
     player_1: 0,
     player_2: 0,
     player_1_standing: 0,
-    player_2_standing: 0,
+    player_2_standing: 0
   })
+  const [toServe, setToServe] = useState("player_1")
+  const [switched, setSwitched] = useState(false)
+  const [deuce, setDeuce] = useState(false)
+  const [advantage, setAdvantage] = useState("")
+
+  const ChangeService = () => {
+    if (toServe == "player_1"){
+      setToServe("player_2")
+    } else {
+      setToServe("player_1")
+    }
+  }
+
+  const CheckService = (player_1: number, player_2: number) => {
+    if ((player_1 + player_2) % 2 != 0){
+      return
+    }
+    ChangeService()
+  }
+
+  const SwitchSides = () => {
+    setSwitched(switched ? false: true)
+    ChangeService()
+  }
 
   const GameWin = (player: keyof typeof scores) => {
       IncrementStanding(player)
       setHistory(prevHistory => [...prevHistory, `${player} won`])
       Alert.alert(player == "player_1" ? "Player 1 won!": "Player 2 won!")
       setMatchRecord(prevMatchRecord => [...prevMatchRecord, scores ])
+      SwitchSides()
       NewSet()
   }
+
+  const DeucePoint = (player: keyof typeof scores) => {
+    if (advantage == player){
+      GameWin(player)
+      setAdvantage("")
+      setDeuce(false)
+    }
+  }
+
+  const CheckDeuce = (newScores: typeof scores) => {
+    if (newScores.player_1 == 10 && newScores.player_2 == 10){
+      setDeuce(true)
+      Alert.alert("Deuce")
+      return
+    }
+  }
+
   const IncrementScore = (player: keyof typeof scores) => { 
     const newScores = {...scores, [player]: scores[player] + 1}
     setScores(newScores)
+    if (deuce){
+      setAdvantage(player)
+      DeucePoint(player)
+      ChangeService()
+      return
+    }
+    CheckService(newScores.player_1, newScores.player_2)
+    CheckDeuce(newScores)
     if (newScores[player] == 11){
       GameWin(player)
       return
@@ -38,7 +88,9 @@ export default function Index() {
   }
 
   const DecrementScore = (player: keyof typeof scores) => {
+    if (scores[player] <= 0){return}
     setScores(prevScores => ({...prevScores, [player]: prevScores[player] - 1}))
+    CheckService(scores.player_1, scores.player_2)
   }
 
   const DecrementStanding = (player: keyof typeof scores) => {
@@ -60,6 +112,7 @@ export default function Index() {
       setScores({player_1: 0, player_2: 0})
       setStanding({player_1: 0, player_2: 0})
       setHistory(prevHistory => ([...prevHistory, "resetted"]))
+      setToServe("player_1")
       setMatchRecord([{}])
   }
 
@@ -90,10 +143,12 @@ export default function Index() {
       case "player_1 won":
         DecrementStanding("player_1") 
         UndoStanding()
+        SwitchSides()
         break
       case "player_2 won":
         DecrementStanding("player_2") 
         UndoStanding()
+        SwitchSides()
         break
       case "resetted":
         UndoReset()
@@ -104,17 +159,21 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.main_view}>
+    <View style={styles.main_view}> 
       <StatusBar hidden={true}></StatusBar>
 
-      <Pressable onPress={() => IncrementScore("player_1")}>
-        <Text style={styles.player_1}>{String(scores.player_1).padStart(2, "0")}</Text>
+      <Pressable onPress={() => IncrementScore(!switched ? "player_1" : "player_2")}>
+        <Text style={toServe == "player_1" ? styles.player_1_serve: styles.player_1}>{String(!switched ? scores.player_1 : scores.player_2).padStart(2, "0")}</Text>
       </Pressable>
 
       <View style= {styles.controls_view}>
-        <Text style={styles.standing}>{standing.player_1}-{standing.player_2}</Text>
+        <Text style={styles.standing}>{!switched ? standing.player_1: standing.player_2}-{!switched ? standing.player_2 : standing.player_1}</Text>
         <Pressable onPress={Reset}>
           <Text style={styles.reset}>Reset</Text>
+        </Pressable>
+
+        <Pressable onPress={SwitchSides}>
+          <Text style={styles.reset}>Switch</Text>
         </Pressable>
 
         <Pressable onPress={Undo}>
@@ -122,8 +181,8 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <Pressable onPress={() => IncrementScore("player_2")}>
-        <Text style={styles.player_2}>{String(scores.player_2).padStart(2, "0")}</Text>
+      <Pressable onPress={() => IncrementScore(!switched ? "player_2" : "player_1")}>
+        <Text style={toServe == "player_2" ? styles.player_2_serve: styles.player_2}>{String(!switched ? scores.player_2: scores.player_1).padStart(2, "0")}</Text>
       </Pressable>
     </View>
   )
