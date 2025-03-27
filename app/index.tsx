@@ -157,16 +157,24 @@ export default function Index() {
     setHistory([...history.slice(0, index)])
   }
 
+  const ScoreButton = ({ player, label }: {player: keyof typeof scores, label: string}) => {
+    return (
+      <Pressable onPress={() => IncrementScore(player)}>
+        <View style={toServe == player ? styles.player_serve : styles.score_view}>
+          <Text style={styles.label}>{label}</Text>
+          <Text style={styles.player}>{String(scores[player]).padStart(2, "0")}</Text>
+        </View>
+      </Pressable>
+    )
+  }
+
   return (
     <View style={styles.main_view}> 
       <StatusBar hidden={true}></StatusBar>
-
-      <Pressable onPress={() => IncrementScore(!switched ? "player_1" : "player_2")}>
-        <View style={toServe == "player_1" ? styles.player_serve : styles.score_view}>
-          <Text style={styles.label}>{String(!switched ? "Player 1" : "Player 2")}</Text>
-          <Text style={styles.player}>{String(!switched ? scores.player_1 : scores.player_2).padStart(2, "0")}</Text>
-        </View>
-      </Pressable>
+      <ScoreButton 
+        player= {!switched ? "player_1" : "player_2"}
+        label= {!switched ? "Player 1" : "Player 2"}
+      ></ScoreButton>
 
       <View style= {styles.controls_view}>
         <Text style={styles.standing}>{!switched ? standing.player_1: standing.player_2}-{!switched ? standing.player_2 : standing.player_1}</Text>
@@ -183,12 +191,10 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <Pressable onPress={() => IncrementScore(!switched ? "player_2" : "player_1")}>
-        <View style={toServe == "player_2" ? styles.player_serve : styles.score_view}>
-          <Text style={styles.label}>{String(!switched ? "Player 2" : "Player 1")}</Text>
-          <Text style={styles.player}>{String(!switched ? scores.player_2: scores.player_1).padStart(2, "0")}</Text>
-        </View>
-      </Pressable>
+      <ScoreButton 
+        player= {!switched ? "player_2" : "player_1"}
+        label= {!switched ? "Player 2" : "Player 1"}
+      ></ScoreButton>
     </View>
   )
 }
