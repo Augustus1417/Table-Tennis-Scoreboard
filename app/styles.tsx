@@ -2,7 +2,7 @@ import {StyleSheet} from "react-native"
 
 const styles = StyleSheet.create({
 main_view: {
-    backgroundColor: 'black',
+    backgroundColor: '#11111b',
     flexDirection: "row",
     flex: 1,
     gap: 20,
@@ -11,53 +11,58 @@ main_view: {
 },
 controls_view: {
     flexDirection: "column",
-    gap: 20,
+    gap: 10,
 },
 standing: {
     color: 'white',
-    fontSize: 60,
+    fontSize: 70,
     textAlign: 'center',
-    borderWidth: 2,
-    borderColor: 'green',
+    borderWidth: 3,
+    borderColor: '#32a852',
     borderRadius: 20,
 },
-player_1: {
-    padding: 30,
-    color: 'white',
-    fontSize: 190,
-    borderColor: 'red',
-    borderWidth: 5,
+score_view: {
+    borderColor: 'transparent',
+    borderWidth: 10,
     borderRadius: 50,
+    flexDirection: "column",
+    alignItems:'center'
 },
-player_1_serve: {
+label: {
+    fontSize: 40,
+    color:"white",
+    textAlign: 'center',
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    marginBottom: 0
+},
+player: {
     padding: 30,
     color: 'white',
-    fontSize: 190,
-    borderColor: 'red',
+    margin: 0,
+    top: 10,
+    fontSize: 200,
+    borderWidth: 0
+},
+player_serve: {
+    borderColor: 'transparent',
+    borderWidth: 10,
+    borderRadius: 50,
+    margin: 0,
     backgroundColor: "#32a852",
-    borderWidth: 5,
-    borderRadius: 50,
 },
-player_2: {
-    padding: 30,
-    color: 'white',
-    fontSize: 190,
-    borderColor: 'blue',
-    borderWidth: 5,
+player_serve_deuce: {
+    borderColor: 'transparent',
+    borderWidth: 10,
     borderRadius: 50,
-},
-player_2_serve: {
-    padding: 30,
-    color: 'white',
-    fontSize: 190,
+    margin: 0,
     backgroundColor: "#32a852",
-    borderColor: 'blue',
-    borderWidth: 5,
-    borderRadius: 50,
 },
-reset: {
+ctrl_btn: {
     color: 'white',
-    fontSize: 50,
+    fontSize: 35,
     textAlign:'center',
     borderWidth: 2,
     borderColor: 'white',

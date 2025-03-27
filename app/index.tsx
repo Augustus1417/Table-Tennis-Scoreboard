@@ -60,7 +60,6 @@ export default function Index() {
   const CheckDeuce = (newScores: typeof scores) => {
     if (newScores.player_1 == 10 && newScores.player_2 == 10){
       setDeuce(true)
-      Alert.alert("Deuce")
       return
     }
   }
@@ -72,7 +71,7 @@ export default function Index() {
       setAdvantage(player)
       DeucePoint(player)
       ChangeService()
-      return
+      return 
     }
     CheckService(newScores.player_1, newScores.player_2)
     CheckDeuce(newScores)
@@ -163,26 +162,32 @@ export default function Index() {
       <StatusBar hidden={true}></StatusBar>
 
       <Pressable onPress={() => IncrementScore(!switched ? "player_1" : "player_2")}>
-        <Text style={toServe == "player_1" ? styles.player_1_serve: styles.player_1}>{String(!switched ? scores.player_1 : scores.player_2).padStart(2, "0")}</Text>
+        <View style={toServe == "player_1" ? styles.player_serve : styles.score_view}>
+          <Text style={styles.label}>{String(!switched ? "Player 1" : "Player 2")}</Text>
+          <Text style={styles.player}>{String(!switched ? scores.player_1 : scores.player_2).padStart(2, "0")}</Text>
+        </View>
       </Pressable>
 
       <View style= {styles.controls_view}>
         <Text style={styles.standing}>{!switched ? standing.player_1: standing.player_2}-{!switched ? standing.player_2 : standing.player_1}</Text>
         <Pressable onPress={Reset}>
-          <Text style={styles.reset}>Reset</Text>
+          <Text style={styles.ctrl_btn}>Reset</Text>
         </Pressable>
 
         <Pressable onPress={SwitchSides}>
-          <Text style={styles.reset}>Switch</Text>
+          <Text style={styles.ctrl_btn}>Switch</Text>
         </Pressable>
 
         <Pressable onPress={Undo}>
-          <Text style={styles.reset}>Undo</Text>
+          <Text style={styles.ctrl_btn}>Undo</Text>
         </Pressable>
       </View>
 
       <Pressable onPress={() => IncrementScore(!switched ? "player_2" : "player_1")}>
-        <Text style={toServe == "player_2" ? styles.player_2_serve: styles.player_2}>{String(!switched ? scores.player_2: scores.player_1).padStart(2, "0")}</Text>
+        <View style={toServe == "player_2" ? styles.player_serve : styles.score_view}>
+          <Text style={styles.label}>{String(!switched ? "Player 2" : "Player 1")}</Text>
+          <Text style={styles.player}>{String(!switched ? scores.player_2: scores.player_1).padStart(2, "0")}</Text>
+        </View>
       </Pressable>
     </View>
   )
