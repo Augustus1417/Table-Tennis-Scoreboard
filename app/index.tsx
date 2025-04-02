@@ -45,7 +45,6 @@ export default function Index() {
       setHistory(prevHistory => [...prevHistory, `${player} won`])
       Alert.alert(player == "player_1" ? "Player 1 won!": "Player 2 won!")
       setMatchRecord(prevMatchRecord => [...prevMatchRecord, scores ])
-      SwitchSides()
       NewSet()
   }
 
@@ -142,12 +141,10 @@ export default function Index() {
       case "player_1 won":
         DecrementStanding("player_1") 
         UndoStanding()
-        SwitchSides()
         break
       case "player_2 won":
         DecrementStanding("player_2") 
         UndoStanding()
-        SwitchSides()
         break
       case "resetted":
         UndoReset()
