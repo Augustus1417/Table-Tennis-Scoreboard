@@ -37,7 +37,6 @@ export default function Index() {
 
   const SwitchSides = () => {
     setSwitched(switched ? false: true)
-    ChangeService()
   }
 
   const GameWin = (player: keyof typeof scores) => {
@@ -86,7 +85,7 @@ export default function Index() {
   }
 
   const DecrementScore = (player: keyof typeof scores) => {
-    if (scores[player] <= 0){return}
+    if (scores[player] <= 0) return
     setScores(prevScores => ({...prevScores, [player]: prevScores[player] - 1}))
     CheckService(scores.player_1, scores.player_2)
   }
