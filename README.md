@@ -2,6 +2,8 @@
 
 A simple and intuitive Table Tennis scoreboard app built with **React Native** and **Expo**.  
 
+![Image](https://github.com/user-attachments/assets/1ffeb936-cc53-4335-905a-0b4574b32797)
+
 ## Features  
 
 - **Score Tracking** – Easily increment scores for both players.  
